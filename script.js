@@ -1,5 +1,5 @@
 // GANTI DENGAN URL CSV DARI GOOGLE SHEETS ANDA
-const SHEETS_URL = 'URL_GOOGLE_SHEETS_CSV_ANDA_DI_SINI';
+const SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1Vap4wBxA_UCcdI2EVx_kn4-jBNYFMQj9znU5h5TeIHc/edit?usp=drivesdk';
 
 let stockData = [];
 
