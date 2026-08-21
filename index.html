@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Stock Opname Alfamart</title>
+<link rel="stylesheet" href="style.css">
+<!-- Library untuk PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <h2>📦 Stock Opname Alfamart</h2>
+
+    <div class="search-box">
+      <input type="text" id="searchPLU" placeholder="🔎 Cari PLU..." onkeyup="filterTable()">
+      <input type="text" id="searchDesc" placeholder="🔎 Cari Description..." onkeyup="filterTable()">
+    </div>
+
+    <div id="loading" class="loading">⏳ Memuat data...</div>
+
+    <div id="table-wrapper">
+      <table id="stockTable">
+        <thead>
+          <tr>
+            <th rowspan="2">PLU</th>
+            <th rowspan="2">Description</th>
+            <th rowspan="2">Sistem</th>
+            <th colspan="3">Fisik</th>
+            <th rowspan="2">Selisih</th>
+            <th rowspan="2">Status</th>
+          </tr>
+          <tr>
+            <th class="sub-th">1</th>
+            <th class="sub-th">2</th>
+            <th class="sub-th">3</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Data akan muncul di sini -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn-reset" onclick="resetAll()">🔄 Reset Semua</button>
+      <button class="btn-pdf" onclick="downloadPDF()">📄 Download Hasil ke PDF</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
