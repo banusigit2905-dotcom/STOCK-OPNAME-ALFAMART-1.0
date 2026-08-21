@@ -26,7 +26,7 @@
           <tr>
             <th rowspan="2">PLU</th>
             <th rowspan="2">Description</th>
-            <th rowspan="2">Sistem</th>
+            <th rowspan="2">On Hand</th>
             <th colspan="3">Fisik</th>
             <th rowspan="2">Selisih</th>
             <th rowspan="2">Status</th>
@@ -44,7 +44,10 @@
     </div>
 
     <div class="action-buttons">
-      <button class="btn-reset" onclick="resetAll()">🔄 Reset Semua</button>
+      <div class="button-row">
+        <button class="btn-reset" onclick="resetAll()">🔄 Reset Fisik</button>
+        <button class="btn-reset-onhand" onclick="resetOnHand()">🔁 Reset On Hand</button>
+      </div>
       <button class="btn-pdf" onclick="downloadPDF()">📄 Download Hasil ke PDF</button>
     </div>
   </div>
