@@ -75,11 +75,15 @@ async function fetchData() {
     stockData = rows
       .slice(HEADER_ROWS)
       .map(row => parseCsvLine(row))
-      .map(cols => ({
-        plu: cols[COL_PLU]?.trim() || '',
-        desc: cols[COL_DESC]?.trim() || '',
-        system: parseInt(cols[COL_SISTEM]) || 0
-      }))
+      .map(cols => {
+        const systemVal = parseInt(cols[COL_SISTEM]) || 0;
+        return {
+          plu: cols[COL_PLU]?.trim() || '',
+          desc: cols[COL_DESC]?.trim() || '',
+          system: systemVal,
+          originalSystem: systemVal // disimpan untuk fitur Reset On Hand
+        };
+      })
       .filter(item => item.plu && /^\d+$/.test(item.plu)); // pastikan PLU angka & tidak kosong
 
     loadingEl.classList.add('hidden');
@@ -266,17 +270,62 @@ function resetAll() {
   });
 }
 
+// 🔁 Reset On Hand ke nilai awal dari spreadsheet
+function resetOnHand() {
+  if (!confirm('Reset semua nilai On Hand ke nilai awal dari spreadsheet?')) return;
+
+  stockData.forEach((item, index) => {
+    item.system = item.originalSystem;
+    renderSistemCell(index);
+    calculateDiff(index);
+  });
+}
 // 📄 Download hasil Stock Opname ke PDF
 function downloadPDF() {
-  const element = document.getElementById('stockTable');
+  const original = document.getElementById('stockTable');
+
+  // html2canvas kesulitan merender elemen <input> (sering hasilnya kosong/blank).
+  // Solusi: buat salinan tabel, ganti semua <input> jadi teks biasa.
+  const clone = original.cloneNode(true);
+
+  clone.querySelectorAll('input').forEach(input => {
+    const span = document.createElement('span');
+    span.innerText = input.value || '0';
+    input.parentNode.replaceChild(span, input);
+  });
+
+  // Bersihkan elemen interaktif (form input Simpan dsb) jika ada yang masih terbuka
+  clone.querySelectorAll('.inline-edit').forEach(el => {
+    const span = document.createElement('span');
+    span.innerText = el.querySelector('.inline-edit-fullname')?.innerText || '';
+    el.parentNode.replaceChild(span, el);
+  });
+
+  // Tempatkan salinan di luar layar dengan lebar penuh (tidak terpotong scroll)
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'fixed';
+  wrapper.style.left = '-9999px';
+  wrapper.style.top = '0';
+  wrapper.style.background = '#ffffff';
+  wrapper.style.padding = '10px';
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+
   const opt = {
-    margin: 10,
+    margin: 8,
     filename: 'Hasil_Stock_Opname.pdf',
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
   };
-  html2pdf().set(opt).from(element).save();
+
+  html2pdf().set(opt).from(clone).save().then(() => {
+    document.body.removeChild(wrapper);
+  }).catch((err) => {
+    console.error('Gagal membuat PDF:', err);
+    document.body.removeChild(wrapper);
+    alert('Gagal membuat PDF. Coba lagi.');
+  });
 }
 
 // Jalankan saat aplikasi dibuka
