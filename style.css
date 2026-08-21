@@ -90,10 +90,16 @@ input[type="number"] {
 
 .action-buttons {
   display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
-.btn-pdf, .btn-reset {
+.button-row {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-pdf, .btn-reset, .btn-reset-onhand {
   padding: 12px;
   border: none;
   border-radius: 5px;
@@ -106,6 +112,7 @@ input[type="number"] {
 .btn-pdf {
   background: #28a745;
   color: white;
+  width: 100%;
 }
 
 .btn-pdf:hover {
@@ -119,6 +126,15 @@ input[type="number"] {
 
 .btn-reset:hover {
   background: #b7181b;
+}
+
+.btn-reset-onhand {
+  background: #f0a500;
+  color: white;
+}
+
+.btn-reset-onhand:hover {
+  background: #cf8f00;
 }
 
 .no-data {
@@ -209,7 +225,17 @@ input[type="number"] {
   }
 
   .action-buttons {
+    gap: 8px;
+  }
+
+  .button-row {
     flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-pdf, .btn-reset, .btn-reset-onhand {
+    font-size: 13px;
+    padding: 10px;
   }
 
   #table-wrapper {
